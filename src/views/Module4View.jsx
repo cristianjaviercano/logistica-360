@@ -1,0 +1,127 @@
+import React,{useState} from 'react';
+const T=({t})=>(<div className="sec-title">{t}</div>);
+const Ca=({color='green',title,children})=>(<div className={`callout ${color}`} style={{marginBottom:'.75rem'}}><div className="callout-title">{title}</div><p>{children}</p></div>);
+const TABS=[['equipos','🚜 Equipos de Manutención'],['estanterias','🗄️ Sistemas de Estanterías'],['ergonomia','🦺 Ergonomía y Seguridad'],['kpis','📊 KPIs de Manipulación']];
+export default function Module4View(){
+  const [tab,setTab]=useState('equipos');
+  return(
+    <div className="animate-in" style={{display:'flex',flexDirection:'column',gap:'1.25rem'}}>
+      <div className="card gradient-header" style={{padding:'2rem'}}>
+        <span style={{fontSize:'.7rem',fontFamily:'JetBrains Mono',color:'#10b981'}}>MÓDULO 4 · Manipulación</span>
+        <h1 style={{fontSize:'2rem',fontWeight:900,color:'#fff',marginTop:'.25rem'}}>Manipulación de Materiales</h1>
+        <p style={{color:'#94a3b8',marginTop:'.5rem',fontSize:'.85rem'}}>Apple (1977) · Tompkins et al. (2010) · ANSI MH16.1</p>
+      </div>
+      <div className="tab-bar">
+        {TABS.map(([id,lbl])=>(<button key={id} className={`tab-btn ${tab===id?'active':''}`} onClick={()=>setTab(id)}>{lbl}</button>))}
+      </div>
+
+      {tab==='equipos'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="Clasificación de Equipos de Manutención"/>
+            <table className="tbl">
+              <thead><tr><th>Equipo</th><th>Capacidad</th><th>Altura max</th><th>Pasillo min</th><th>Aplicación</th></tr></thead>
+              <tbody>
+                {[
+                  ['Transpaleta manual','2,000 kg','0.2 m (solo suelo)','1.5 m','Cargue/descargue en andén'],
+                  ['Transpaleta eléctrica','2,500 kg','0.3 m','1.6 m','Traslados en planta, ágil'],
+                  ['Montacargas contrapesado','1,500–5,000 kg','6–7 m','3.5 m','Almacenaje estantería selectiva'],
+                  ['Reach Truck','1,200–2,500 kg','10–12 m','2.7 m','Almacenaje en altura, pasillos estrechos'],
+                  ['Trilateral / VNA','1,000–1,500 kg','14–16 m','1.5–1.8 m','Very Narrow Aisle, alta densidad'],
+                  ['AGV (Veh. Guiado Autom.)','Variado','Variado','Diseñado','Almacenes automatizados, e-commerce'],
+                  ['Transelevador (AS/RS)','500–2,000 kg','45+ m','0.8–1.2 m','Alta densidad, automatización total'],
+                ].map(r=>(<tr key={r[0]}><td style={{color:'#10b981',fontWeight:600}}>{r[0]}</td><td>{r[1]}</td><td style={{color:'#f59e0b'}}>{r[2]}</td><td>{r[3]}</td><td style={{color:'#94a3b8'}}>{r[4]}</td></tr>))}
+              </tbody>
+            </table>
+          </div>
+          <div className="card">
+            <T t="Criterios de Selección del Equipo Óptimo"/>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'.75rem',fontSize:'.75rem'}}>
+              {[['Volumen de Operación','Operaciones por hora necesarias vs capacidad del equipo. Dimensionar para el pico, no el promedio.'],['Altura de Almacenaje','La altura determina el tipo de equipo. Por encima de 8m, solo reach truck o VNA es práctico.'],['Tipo de carga','Peso, dimensiones, estabilidad. Cargas irregulares requieren accesorios (pinzas, ganchos).'],['Ancho de pasillo','El pasillo define el equipo, o viceversa. Rediseñar layout y equipo conjuntamente.'],['Costo total de propiedad','No solo el precio de compra: mantenimiento, energía, capacitación, repuestos.'],['Nivel de automatización','Capex elevado vs reducción de mano de obra a largo plazo. ROI típico: 3–7 años.']].map(([t,d])=>(<div key={t} className="card"><p style={{fontWeight:700,color:'#f1f5f9',marginBottom:'.3rem'}}>{t}</p><p style={{color:'#94a3b8'}}>{d}</p></div>))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab==='estanterias'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="Sistemas de Estanterías — Guía de Selección"/>
+            {[
+              {n:'Estantería Selectiva',d:'El estándar más usado. Acceso directo a cada pallet sin mover otro. FIFO natural. Pasillos de 3.0–3.5 m. Densidad media (~40% del área es pasillo). Ideal para alta variedad de SKUs con poca profundidad de stock.',pro:'100% selectividad',con:'Baja densidad de almacenaje'},
+              {n:'Drive-In / Drive-Through',d:'Montacargas entra dentro de la estantería. Alta densidad (mínimos pasillos). Drive-In: LIFO forzado. Drive-Through: FIFO posible. Ideal para productos de alta rotación y pocos SKUs (frigoríficos, bebidas).',pro:'Densidad hasta 85%',con:'Sólo 1 referencia por callejón'},
+              {n:'Estantería Dinámica (Gravity Flow)',d:'Carrileras con rodillos inclinados. El producto se desliza por gravedad desde la carga (posterior) hasta el picking (frontal). FIFO automático. Ideales para zonas de picking de alta velocidad.',pro:'FIFO automático, alta productividad',con:'Sólo para cajas de peso homogéneo'},
+              {n:'Estantería Móvil (Compactus)',d:'Filas de estanterías sobre rieles motorizados. Se abre sólo el pasillo necesario. Densidad hasta 90%. Ideales para archivos, repuestos, farmacéutica. Velocidad de acceso baja.',pro:'Máxima densidad',con:'Un solo pasillo abierto a la vez'},
+              {n:'Cantilever',d:'Sin columnas frontales. Brazos horizontales para cargas largas (tubos, perfiles, maderas). No apto para pallets convencionales.',pro:'Único sistema para carga larga',con:'Requiere montacargas especial'},
+            ].map(({n,d,pro,con})=>(
+              <div key={n} style={{display:'flex',flexDirection:'column',gap:'.3rem',padding:'.75rem',borderRadius:8,background:'rgba(16,185,129,.03)',border:'1px solid rgba(16,185,129,.1)',marginBottom:'.5rem'}}>
+                <div style={{fontWeight:700,color:'#f1f5f9',fontSize:'.82rem'}}>{n}</div>
+                <p style={{fontSize:'.75rem',color:'#94a3b8',lineHeight:1.5}}>{d}</p>
+                <div style={{display:'flex',gap:'1rem',fontSize:'.7rem',marginTop:'.25rem'}}>
+                  <span style={{color:'#6ee7b7'}}>✓ {pro}</span>
+                  <span style={{color:'#fca5a5'}}>✗ {con}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {tab==='ergonomia'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="Ergonomía en el Almacén — Zona de Confort"/>
+            <Ca color="green" title="Zona óptima de manipulación manual">
+              La zona de confort ergonómica está entre 75 cm y 130 cm de altura desde el suelo, y a no más de 35 cm del cuerpo horizontalmente. Los SKUs A del slotting deben ubicarse en esta zona para minimizar esfuerzo y lesiones.
+            </Ca>
+            <table className="tbl">
+              <thead><tr><th>Zona de Altura</th><th>Peso máximo recomendado</th><th>Riesgo</th></tr></thead>
+              <tbody>
+                {[
+                  ['Por encima de hombros (&gt;160 cm)','5 kg','Alto — esfuerzo cervical'],
+                  ['A la altura del hombro (120–160 cm)','10 kg','Medio'],
+                  ['Zona de confort (75–120 cm)','25 kg','Mínimo — posición neutra'],
+                  ['A la altura de la rodilla (40–75 cm)','15 kg','Medio — flexión de columna'],
+                  ['A nivel del suelo (&lt;40 cm)','10 kg','Alto — esfuerzo lumbar'],
+                ].map(r=>(<tr key={r[0]}><td style={{color:'#f1f5f9'}}>{r[0]}</td><td style={{color:'#f59e0b',fontWeight:600}}>{r[1]}</td><td style={{color:r[2].startsWith('Alto')?'#fca5a5':r[2].startsWith('Medio')?'#fcd34d':'#6ee7b7'}}>{r[2]}</td></tr>))}
+              </tbody>
+            </table>
+          </div>
+          <div className="card">
+            <T t="Normativa de Seguridad Industrial en Almacenes"/>
+            <div style={{display:'flex',flexDirection:'column',gap:'.5rem',fontSize:'.78rem'}}>
+              {[
+                ['NTC 3680 (Colombia)','Señalización de almacenes: colores, símbolos y ubicación de señales de seguridad.'],
+                ['ANSI/ASME B56.1','Seguridad de montacargas. Velocidad máxima 8 km/h interior, 6 km/h zona peatonal.'],
+                ['OSHA 1910.178','Operación de montacargas: certificación de operadores, inspección diaria, mantenimiento.'],
+                ['ISO 45001:2018','Sistema de gestión de seguridad y salud en el trabajo. Reemplaza OHSAS 18001.'],
+                ['Res. 2400/1979 (Colombia)','Higiene y seguridad industrial: iluminación mínima (200 lux en almacenes), pasillos mínimos.'],
+              ].map(([n,d])=>(<div key={n} style={{display:'flex',gap:'.75rem'}}><span style={{color:'#f59e0b',fontWeight:700,flexShrink:0,minWidth:160}}>{n}</span><span style={{color:'#94a3b8'}}>{d}</span></div>))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab==='kpis'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="KPIs de Manipulación y Productividad"/>
+            <table className="tbl">
+              <thead><tr><th>Indicador</th><th>Fórmula</th><th>Meta</th></tr></thead>
+              <tbody>
+                {[
+                  ['Líneas por hora-hombre picking','Líneas procesadas / Horas hombre operativas','30–60 líneas/hh (manual)'],
+                  ['Tasa de daño en manipulación','(Ítems dañados / Total manipulados) × 100','&lt; 0.1%'],
+                  ['Tiempo promedio de recepción','Tiempo (recepción → ubicado en WMS) / N° recepciones','&lt; 2 horas'],
+                  ['Costo por línea de picking','Costo total picking / Líneas totales','Reducción continua'],
+                  ['Utilización de equipos','Horas productivas / Horas disponibles × 100','75–85%'],
+                  ['Accidentes por millón de horas','(N° accidentes / Horas totales) × 10⁶','0 (objetivo)'],
+                ].map(r=>(<tr key={r[0]}><td style={{color:'#10b981',fontWeight:600}}>{r[0]}</td><td style={{fontFamily:'JetBrains Mono',fontSize:'.68rem',color:'#6ee7b7'}}>{r[1]}</td><td style={{color:'#f59e0b'}}>{r[2]}</td></tr>))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
