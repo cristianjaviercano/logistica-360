@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 const T=({t})=>(<div className="sec-title">{t}</div>);
 const Ca=({color='green',title,children})=>(<div className={`callout ${color}`} style={{marginBottom:'.75rem'}}><div className="callout-title">{title}</div><p>{children}</p></div>);
-const TABS=[['componentes','📊 Componentes de Costo (H&L)'],['basico','📦 Revisión Continua (EOQ)'],['estocastica','🎲 Demanda Aleatoria'],['desconocida','❓ Un Solo Periodo'],['python','🐍 Solvers Python']];
+const TABS=[['componentes','📊 Componentes de Costo (H&L)'],['basico','📦 Revisión Continua (EOQ)'],['faltantes','⚠️ Con Faltantes'],['estocastica','🎲 Demanda Aleatoria'],['ejemplos','💡 Ejemplos Resueltos'],['ejercicios','✏️ Ejercicios'],['python','🐍 Solvers Python']];
 
 export default function Module5View(){
   const [tab,setTab]=useState('componentes');
@@ -80,7 +80,127 @@ export default function Module5View(){
         </div>
       )}
 
-      {tab==='estocastica'&&(
+      {tab==='faltantes'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="18.4 Modelo EOQ con Faltantes Permitidos"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              En la práctica, frecuentemente es economically viable permitir faltantes temporales. 
+              Cuando la demanda puede acumularse (backordering), se incurre en un costo de penalización por cada unidad faltante por unidad de tiempo.
+            </p>
+            <div className="formula-box">
+              {'Modelo con Faltantes Permitidos:\n\n• Q = Cantidad ordenada\n• S = Máximo faltante permitido\n• Q-S = Inventario máximo\n\nCosto Total por Unidad de Tiempo:\nT(Q,S) = (d/Q)·K + d·c + (h/2d)·(Q-S)² + (p/2d)·S²\n\nDerivando y igualando a cero:\nQ* = √(2dK/h) · √((h+p)/p)\nS* = Q* · (h/(h+p))'}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab==='ejemplos'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="Ejemplo 1: EOQ Básico (Hillier & Lieberman)"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              <b>Datos del problema:</b><br/>
+              • Demanda anual: d = 8,000 unidades/año<br/>
+              • Costo de ordenar: K = $12,000 por orden<br/>
+              • Costo de mantener: h = $0.30 por unidad/año
+            </p>
+            <div style={{fontSize:'1.1rem',fontFamily:'JetBrains Mono',textAlign:'center',padding:'1rem',color:'#10b981',background:'#022c22',borderRadius:'8px',marginBottom:'1rem'}}>
+              Q* = √(2 × 8,000 × 12,000 / 0.30) = √(640,000,000) = 25,298 unidades
+            </div>
+            <p style={{fontSize:'.75rem',color:'#94a3b8'}}>Costo total mínimo: T = √(2 × d × K × h) = √(2 × 8,000 × 12,000 × 0.30) = $7,589.57/año</p>
+          </div>
+          <div className="card">
+            <T t="Ejemplo 2: Modelo con Tiempo de Entrega"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              <b>Datos:</b> d = 8,000/año, K = $12,000, h = $0.30/año, tiempo de entrega L = 3 días<br/>
+              <b>Ciclo óptimo:</b> T* = Q*/d = 25,298/8,000 = 3.16 años (≈ 1,154 días)<br/>
+              <b>Punto de reorden:</b> R = d × L = (8,000/365) × 3 = 65.75 ≈ 66 unidades
+            </p>
+            <div style={{fontSize:'1rem',fontFamily:'JetBrains Mono',textAlign:'center',padding:'1rem',color:'#fca5a5',background:'#450a0a',borderRadius:'8px'}}>
+              Cuando el inventario baje a 66 unidades, colocar orden de 25,298 unidades
+            </div>
+          </div>
+          <div className="card">
+            <T t="Ejemplo 3: Con Faltantes Permitidos"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              <b>Datos:</b> d = 1,200/año, K = $50, h = $1.20/unidad-año, p = $3/unidad-año
+            </p>
+            <div style={{fontSize:'1rem',fontFamily:'JetBrains Mono',textAlign:'center',padding:'1rem',color:'#60a5fa',background:'#1e3a5f',borderRadius:'8px',marginBottom:'1rem'}}>
+              Q* = √(2×1200×50/1.2) × √((1.2+3)/3) = √(100,000) × 1.183 = 316.23 × 1.183 = 374 unidades<br/>
+              S* = 374 × (1.2/(1.2+3)) = 374 × 0.286 = 107 unidades (faltante máximo)
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab==='ejercicios'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="Ejercicio 1: Cálculo de EOQ"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              Una empresa fabricante de muebles consume 5,000 ruedas de caucho mensualmente. 
+              El costo de ordenar una corrida de producción es de $800 y el costo de mantener una 
+              rueda en inventario es de $2 por unidad/mes.<br/><br/>
+              <b>Determine:</b><br/>
+              a) El tamaño óptimo del lote (Q*)<br/>
+              b) El número de pedidos por año<br/>
+              c) El costo total anual
+            </p>
+            <details style={{background:'#0f172a',padding:'1rem',borderRadius:'8px'}}>
+              <summary style={{cursor:'pointer',color:'#10b981',fontWeight:'bold'}}>Ver Solución</summary>
+              <div style={{marginTop:'1rem',fontSize:'.85rem',color:'#cbd5e1'}}>
+                <b>Solución:</b><br/>
+                d = 5,000/mes × 12 = 60,000 unidades/año<br/>
+                K = $800/orden<br/>
+                h = $2/unidad-mes × 12 = $24/unidad-año<br/><br/>
+                Q* = √(2×60,000×800/24) = √(4,000,000) = 2,000 unidades<br/>
+                Número de pedidos = 60,000/2,000 = 30 pedidos/año<br/>
+                Costo total = (60,000/2,000)×800 + (2,000/2)×24 = $24,000 + $24,000 = $48,000/año
+              </div>
+            </details>
+          </div>
+          <div className="card">
+            <T t="Ejercicio 2: Punto de Reorden"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              Utilizando los datos del ejercicio anterior, si el tiempo de entrega es de 2 semanas:<br/><br/>
+              <b>Determine el punto de reorden.</b>
+            </p>
+            <details style={{background:'#0f172a',padding:'1rem',borderRadius:'8px'}}>
+              <summary style={{cursor:'pointer',color:'#10b981',fontWeight:'bold'}}>Ver Solución</summary>
+              <div style={{marginTop:'1rem',fontSize:'.85rem',color:'#cbd5e1'}}>
+                <b>Solución:</b><br/>
+                Demanda semanal = 60,000/52 = 1,153.85 unidades/semana<br/>
+                Tiempo de entrega = 2 semanas<br/>
+                R = d × L = 1,153.85 × 2 = 2,307.7 ≈ 2,308 unidades
+              </div>
+            </details>
+          </div>
+          <div className="card">
+            <T t="Ejercicio 3: Modelo con Faltantes"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              Una librería tiene una demanda anual de 3,000 ejemplares de un libro. 
+              El costo de ordenar es de $100, el costo de mantener es de $6/unidad-año, 
+              y el costo por faltante es de $25/unidad-año.<br/><br/>
+              <b>Determine:</b><br/>
+              a) Cantidad óptima a ordenar<br/>
+              b) Faltante máximo permitido
+            </p>
+            <details style={{background:'#0f172a',padding:'1rem',borderRadius:'8px'}}>
+              <summary style={{cursor:'pointer',color:'#10b981',fontWeight:'bold'}}>Ver Solución</summary>
+              <div style={{marginTop:'1rem',fontSize:'.85rem',color:'#cbd5e1'}}>
+                <b>Solución:</b><br/>
+                d = 3,000/año, K = $100, h = $6/unidad-año, p = $25/unidad-año<br/><br/>
+                Q* = √(2×3000×100/6) × √((6+25)/25)<br/>
+                Q* = √(1,000,000) × √(1.24) = 1,000 × 1.1135 = 1,114 unidades<br/><br/>
+                S* = 1,114 × (6/(6+25)) = 1,114 × 0.1935 = 215 unidades
+              </div>
+            </details>
+          </div>
+        </div>
+      )}
+
+      {tab==='python'&&(
         <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
           <div className="card">
             <T t="18.6 Modelos Estocásticos de Revisión Continua (La variabilidad Aleatoria)"/>
