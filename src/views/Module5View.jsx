@@ -1,96 +1,250 @@
 import React,{useState} from 'react';
 const T=({t})=>(<div className="sec-title">{t}</div>);
 const Ca=({color='green',title,children})=>(<div className={`callout ${color}`} style={{marginBottom:'.75rem'}}><div className="callout-title">{title}</div><p>{children}</p></div>);
-const TABS=[['componentes','📊 Componentes de Costo (H&L)'],['basico','📦 Revisión Continua (EOQ)'],['faltantes','⚠️ Con Faltantes'],['estocastica','🎲 Demanda Aleatoria'],['ejemplos','💡 Ejemplos Resueltos'],['ejercicios','✏️ Ejercicios'],['python','🐍 Solvers Python']];
+const Formula=({children})=><div className="formula-box" style={{whiteSpace:'pre-wrap'}}>{children}</div>;
+const TABS=[
+  ['fundamentos','📚 Fundamentos de Inventarios'],
+  ['costos','💰 Costos de Inventario'],
+  ['eoq','📦 Modelo EOQ Básico'],
+  ['extensiones','🔄 Extensiones EOQ'],
+  ['produccion','🏭 Lote Económico de Producción'],
+  ['estocastico','🎲 Modelos Estocásticos'],
+  ['service','📊 Nivel de Servicio'],
+  ['ejemplos','💡 Ejemplos Resueltos'],
+  ['ejercicios','✏️ Ejercicios'],
+  ['python','🐍 Solvers Python']
+];
 
 export default function Module5View(){
-  const [tab,setTab]=useState('componentes');
+  const [tab,setTab]=useState('fundamentos');
   return(
     <div className="animate-in" style={{display:'flex',flexDirection:'column',gap:'1.25rem'}}>
       <div className="card gradient-header" style={{padding:'2rem'}}>
         <span style={{fontSize:'.7rem',fontFamily:'JetBrains Mono',color:'#10b981'}}>MÓDULO 5 · Optimización I.O.</span>
-        <h1 style={{fontSize:'2rem',fontWeight:900,color:'#fff',marginTop:'.25rem'}}>Teoría de Inventarios Científica</h1>
-        <p style={{color:'#94a3b8',marginTop:'.5rem',fontSize:'.85rem'}}>Basado en <i>Introducción a la Investigación de Operaciones (Hillier & Lieberman - Capítulo 18)</i>.</p>
+        <h1 style={{fontSize:'2rem',fontWeight:900,color:'#fff',marginTop:'.25rem'}}>Gestión Científica de Inventarios</h1>
+        <p style={{color:'#94a3b8',marginTop:'.5rem',fontSize:'.85rem'}}>
+          Basado en: Hillier & Lieberman • Ballou • Chopra & Meindl
+        </p>
       </div>
       <div className="tab-bar" style={{overflowX:'auto',whiteSpace:'nowrap'}}>
         {TABS.map(([id,lbl])=>(<button key={id} className={`tab-btn ${tab===id?'active':''}`} onClick={()=>setTab(id)}>{lbl}</button>))}
       </div>
 
-      {tab==='componentes'&&(
+      {tab==='fundamentos'&&(
         <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
           <div className="card">
-            <T t="18.2 Componentes de los Modelos de Inventarios"/>
+            <T t="5.1 Importancia de la Gestión de Inventarios"/>
             <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              La investigación de operaciones clasifica las componentes elementales de un modelo físico en dos categorías: modelos <b>determinísticos</b> y <b>estocásticos</b>. Todos ellos están condicionados por los siguientes seis factores fundamentales descritos por Hillier & Lieberman.
+              Los inventarios son uno de los activos más importantes de una empresa. Según Ballou (2004), 
+              "el inventario representa típicamente el 25% al 50% del capital de trabajo de una empresa".
+            </p>
+            <Ca color="blue" title="¿Por qué mantener inventario?">
+              Los inventarios existen por tres razones principales: 1) desacoplar las operaciones de proveedores y clientes, 
+              2) permitir economías de escala en producción y compra, 3) proteger contra la incertidumbre en demanda y oferta.
+            </Ca>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'.75rem'}}>
+              <div style={{padding:'1rem',background:'#0f172a',border:'1px solid #1e293b',borderRadius:'8px'}}>
+                <span className="badge badge-blue" style={{marginBottom:'.5rem',display:'inline-block'}}>Demanda Independiente</span>
+                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>Artículos terminados o repuestos para clientes externos. No se puede predecir con certeza.</p>
+              </div>
+              <div style={{padding:'1rem',background:'#0f172a',border:'1px solid #1e293b',borderRadius:'8px'}}>
+                <span className="badge badge-green" style={{marginBottom:'.5rem',display:'inline-block'}}>Demanda Dependiente</span>
+                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>Componentes o materias primas que dependen de la producción de otros artículos. Se calcula determinísticamente.</p>
+              </div>
+            </div>
+          </div>
+          <div className="card">
+            <T t="5.2 Tipos de Inventario"/>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'.5rem',marginTop:'.5rem'}}>
+              {[
+                ['Materia Prima','Insumos básicos para producción'],
+                ['Trabajo en Proceso','Productos en elaboración'],
+                ['Producto Terminado','Bienes listos para venta'],
+                ['Repuestos','Piezas para mantenimiento']
+              ].map(([tipo,desc])=>(
+                <div key={tipo} style={{padding:'.75rem',background:'#1e293b',borderRadius:'6px',textAlign:'center'}}>
+                  <div style={{fontSize:'.7rem',color:'#10b981',fontWeight:'bold'}}>{tipo}</div>
+                  <div style={{fontSize:'.65rem',color:'#94a3b8'}}>{desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab==='costos'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="5.3 Componentes del Costo de Inventario"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              Según Chopra & Meindl, los costos de inventario se dividen en cuatro categorías fundamentales.
             </p>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'.75rem'}}>
               <div style={{padding:'1rem',background:'#0f172a',border:'1px solid #1e293b',borderRadius:'8px'}}>
-                <span className="badge badge-green" style={{marginBottom:'.5rem',display:'inline-block'}}>1. Costos de Ordenar c(z)</span>
-                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>El costo $c(z)$ de adquirir la cantidad $z$. Está compuesto por un término proporcional a la cantidad y una constante o costo fijo de preparación $K$.<br/><br/><code style={{color:'#10b981'}}>{'c(z) = K + cz  (si z > 0)'}<br/>{'c(z) = 0       (si z = 0)'}</code></p>
+                <span className="badge badge-green" style={{marginBottom:'.5rem',display:'inline-block'}}>1. Costo de Adquisición c(z)</span>
+                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>
+                  C(z) = K + cz (si z es mayor que 0)<br/>
+                  K = Costo fijo de ordenamiento<br/>
+                  c = Costo unitario variable
+                </p>
               </div>
               <div style={{padding:'1rem',background:'#0f172a',border:'1px solid #1e293b',borderRadius:'8px'}}>
-                <span className="badge badge-blue" style={{marginBottom:'.5rem',display:'inline-block'}}>2. Costos de Mantener (h)</span>
-                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>Representan el **costo del capital invertido** (costo de oportunidad), espacio, seguros e impuestos. Es una función continua que multiplica la cantidad promedio alojada en el vector temporal durante el ciclo analizado.</p>
+                <span className="badge badge-blue" style={{marginBottom:'.5rem',display:'inline-block'}}>2. Costo de Mantener h</span>
+                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>
+                  Incluye: costo de capital, almacenamiento, seguros, impuestos, obsolescencia.<br/>
+                  h = IC (tasa de mantener × costo unitario)
+                </p>
               </div>
               <div style={{padding:'1rem',background:'#0f172a',border:'1px solid #1e293b',borderRadius:'8px'}}>
-                <span className="badge badge-yellow" style={{marginBottom:'.5rem',display:'inline-block'}}>3. Penalización por Faltantes (p)</span>
-                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>Ocurre cuando la demanda excede el inventario. Se divide en dos lógicas:<br/><b>Con faltantes (Backordering):</b> La orden se acumula con retraso de ingresos.<br/><b>Sin faltantes:</b> Pérdida total de la venta enviando señal prioritaria a alto costo.</p>
+                <span className="badge badge-yellow" style={{marginBottom:'.5rem',display:'inline-block'}}>3. Costo por Faltantes p</span>
+                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>
+                  Pérdida de imagen, ventas perdidas, trabajo administrativo adicional.<br/>
+                  Backordering vs Sales Lost
+                </p>
               </div>
               <div style={{padding:'1rem',background:'#0f172a',border:'1px solid #1e293b',borderRadius:'8px'}}>
-                <span className="badge badge-yellow" style={{marginBottom:'.5rem',display:'inline-block'}}>4 y 5. Valores de Rescate (v) e Ingreso</span>
-                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>El <i>valor de salvamento</i> recupera capital en estadios terminales de venta. El ingreso se elude usualmente, dado que es exógeno a las estrategias bajo "mercados inelásticos perfectos".</p>
-              </div>
-              <div style={{gridColumn:'1 / span 2',padding:'1rem',background:'#022c22',border:'1px solid #10b981',borderRadius:'8px'}}>
-                <span className="badge badge-green" style={{marginBottom:'.5rem',display:'inline-block'}}>6. Tasa de Descuento (α)</span>
-                <p style={{fontSize:'.75rem',color:'#6ee7b7',lineHeight:1.6}}>En horizontes de planeación muy extendidos temporalmente, el modelo debe proyectar todos sus costos futuros conociendo la equivalencia temporal del valor del dinero. Se descuentan las utilidades multiplicando por un factor de descuento $\alpha$ correspondiente al Valor Presente Semestral/Anual, usualmente $\alpha = \frac{1}{1 + r}$ en lugar de emplear montos absolutos estáticos.</p>
+                <span className="badge badge-purple" style={{marginBottom:'.5rem',display:'inline-block'}}>4. Costo de Preparación</span>
+                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>
+                  Costos de setup en producción: tiempo muerto, ajustes de maquinaria, herramientas.
+                </p>
               </div>
             </div>
+          </div>
+          <div className="card">
+            <T t="Cálculo del Costo de Mantener"/>
+            <Formula>{'h = C × i\n\nDonde:\n• C = Costo unitario del artículo\n• i = Tasa anual de mantener (%)\n\nEjemplo: C = $100, i = 25%\nh = 100 × 0.25 = $25/unidad-año'}</Formula>
           </div>
         </div>
       )}
 
-      {tab==='basico'&&(
+      {tab==='eoq'&&(
         <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
           <div className="card">
-            <T t="18.3 Modelos Determinísticos de Revisión Continua"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              La situación estándar modelada. La demanda se retira del inventario a una <b>tasa constante conocida $d$</b> (unidades/unidad de tiempo). La reposición es de cantidad $Q$.
-            </p>
-            <Ca color="blue" title="Formalización de Supuestos (Sub-Rutina Básica EOQ)">
-              <ol style={{paddingLeft:'1rem',marginTop:'.25rem'}}>
-                <li>Tasa de demanda constante conocida $d$.</li>
-                <li>Ciclo de reposición exacto que eleva el inventario de $0$ a $Q$ sin Lead Time (entendido analíticamente como $Q$ que agota el vector de espera).</li>
-                <li>No existen faltantes parametrizados (p=0).</li>
-              </ol>
+            <T t="5.4 Modelo de Cantidad Económica de Pedido (EOQ)"/>
+            <Ca color="blue" title="Supuestos del Modelo EOQ Básico">
+              1. Demanda determinística y constante (d unidades/tiempo)<br/>
+              2. Tiempo de entrega conocido y constante<br/>
+              3. No se permiten faltantes<br/>
+              4. Costo de adquisición lineal<br/>
+              5. Reabastecimiento instantáneo
             </Ca>
-            <div className="formula-box">
-              {'Derivación del Costo T Esperado por Unidad de Tiempo:\n\n1. Costo por Ciclo = K + cQ + h(Q/2) * (Q/d)\n2. Longitud del Ciclo = Q/d\n3. Costo Total por Unidad de Tiempo T = (Costo por Ciclo) / (Longitud del Ciclo)\n\nT(Q) = [ (d/Q) * K ] + [ d*c ] + [ (Q/2) * h ]\n\nMinimización mediante Primera Derivada:\n∂T/∂Q = - (d*K / Q²) + 0 + (h / 2) = 0\n\nd*K / Q² = h / 2\nQ² = 2*d*K / h\n\nQ* = √( 2*d*K / h )'}
-            </div>
+            <Formula>{'Derivación del Modelo EOQ:\n\n1. Costo por ciclo = K + cQ\n2. Inventario promedio = Q/2\n3. Costo mantener por ciclo = h(Q/2)(Q/d)\n4. Número de ciclos/año = d/Q\n\nCT(Q) = (d/Q)K + dc + (hQ/2)\n\nDerivando e igualando a cero:\ndCT/dQ = -dK/Q² + h/2 = 0\n\nQ* = √(2dK/h)'}</Formula>
           </div>
           <div className="card">
-            <T t="Lote Económico con Faltantes Permitidos"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              Se retira el supuesto 3. Se asume que la demanda puede quedar latente asumiendo el costo de penalización $p$. Existe un umbral del déficit de inventario que definimos como $S$.
+            <T t="Ejemplo EOQ Básico"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',marginBottom:'.5rem'}}>
+              Una empresa vende 8,000 unidades/año. El costo de ordenar es $50 por pedido y el costo unitario es $25. 
+              La tasa de mantener es 20% anual.
             </p>
-            <div style={{fontSize:'1rem',fontFamily:'JetBrains Mono',textAlign:'center',padding:'1rem',color:'#fca5a5',background:'#450a0a',borderRadius:'8px',marginBottom:'1rem'}}>
-              Q* = √( 2*d*K / h ) * √( (h+p) / p )
-            </div>
-            <p style={{fontSize:'.75rem',color:'#cbd5e1'}}>Este relajamiento demuestra analíticamente que, contrario a la lógica coloquial, en escenarios de demanda rígida donde el costo de penalización $p$ no cancela negocios, <b>permitir ligeros faltantes</b> economiza el gasto frente a retener excesos puros (h).</p>
+            <Formula>{'Datos:\nd = 8,000 unidades/año\nK = $50/pedido\nC = $25/unidad\ni = 20%\nh = C × i = 25 × 0.20 = $5/unidad-año\n\nSolución:\nQ* = √(2 × 8000 × 50 / 5)\nQ* = √(160,000) = 400 unidades\n\nCosto Total Anual:\nCT = (8000/400)×50 + (400/2)×5 + 8000×25\nCT = 1000 + 1000 + 200,000 = $202,000'}</Formula>
+          </div>
+          <div className="card">
+            <T t="Punto de Reorden (ROP)"/>
+            <Formula>{'ROP = d × L\n\nDonde:\n• d = Demanda diaria (D/365)\n• L = Tiempo de entrega (días)\n\nEjemplo: D = 8000/año, L = 5 días\ndiaria = 8000/365 = 21.92 ud/día\nROP = 21.92 × 5 = 109.6 ≈ 110 unidades'}</Formula>
           </div>
         </div>
       )}
 
-      {tab==='faltantes'&&(
+      {tab==='extensiones'&&(
         <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
           <div className="card">
-            <T t="18.4 Modelo EOQ con Faltantes Permitidos"/>
+            <T t="5.5 EOQ con Descuentos por Cantidad"/>
             <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              En la práctica, frecuentemente es economically viable permitir faltantes temporales. 
-              Cuando la demanda puede acumularse (backordering), se incurre en un costo de penalización por cada unidad faltante por unidad de tiempo.
+              Los proveedores ofrecen precios unitarios más bajos para pedidos grandes. 
+              Se debe comparar el costo total para diferentes niveles de descuento.
             </p>
-            <div className="formula-box">
-              {'Modelo con Faltantes Permitidos:\n\n• Q = Cantidad ordenada\n• S = Máximo faltante permitido\n• Q-S = Inventario máximo\n\nCosto Total por Unidad de Tiempo:\nT(Q,S) = (d/Q)·K + d·c + (h/2d)·(Q-S)² + (p/2d)·S²\n\nDerivando y igualando a cero:\nQ* = √(2dK/h) · √((h+p)/p)\nS* = Q* · (h/(h+p))'}
+            <Formula>{'Algoritmo:\n\n1. Calcular Q* con precio base\n2. Si Q* ≥ cantidad con descuento → usar Q*\n3. Si Q* < cantidad con descuento:\n   • Calcular CT en Q* (precio base)\n   • Calcular CT en punto de descuento\n   • Comparar y elegir el menor'}</Formula>
+          </div>
+          <div className="card">
+            <T t="EOQ con Faltantes Permitidos"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              Permite faltantes (backordering) para reducir costos de mantener. 
+              El cliente espera el reabastecimiento.
+            </p>
+            <Formula>{'Q* = √(2dK/h) × √((h+p)/p)\n\nS* = Q* × (h/(h+p))\n\nDonde:\n• S = Máximo faltante permitido\n• p = Costo de faltante por unidad/tiempo'}</Formula>
+            <Ca color="yellow" title="Trade-off">
+              Mayor faltante → Menor inventario → Menor costo de mantener → Mayor penalización
+            </Ca>
+          </div>
+        </div>
+      )}
+
+      {tab==='produccion'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="5.6 Lote Económico de Producción (EPQ)"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              Aplicable cuando la reposición es gradual (producción en lugar de compra instantánea). 
+              El inventario alcanza un pico y luego se consume mientras se produce.
+            </p>
+            <Formula>{'Modelo EPQ (Economic Production Quantity):\n\nQ* = √(2dK/h) × √(p/(p-d))\n\nDonde:\n• d = Tasa de demanda\n• p = Tasa de producción (p > d)\n• h = Costo de mantener\n\nInventario máximo = Q*(1 - d/p)'}</Formula>
+          </div>
+          <div className="card">
+            <T t="Ejemplo EPQ"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',marginBottom:'.5rem'}}>
+              Una fábrica produce 200 unidades/día y las consume a 50 unidades/día. 
+              Costo de setup = $1,000, costo de mantener = $2/unidad-año.
+            </p>
+            <Formula>{'Datos:\nd = 50 ud/día × 365 = 18,250/año\np = 200 ud/día\nK = $1,000\nh = $2\n\nQ* = √(2×18250×1000/2) × √(200/(200-50))\nQ* = √(18,250,000) × √(1.333)\nQ* = 4,271 × 1.155 = 4,937 unidades\n\nInventario máximo = 4937 × (1 - 50/200) = 4937 × 0.75 = 3703 ud'}</Formula>
+          </div>
+        </div>
+      )}
+
+      {tab==='estocastico'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="5.7 Modelos con Demanda Probabilística"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              En la realidad, la demanda rarely es constante. Los modelos estocásticos consideran 
+              la variabilidad mediante distribuciones de probabilidad.
+            </p>
+            <Formula>{'Componentes del modelo estocástico:\n\n• Demanda D ~ N(μ, σ²)\n• Tiempo de entrega L ~ N(L̄, σL²)\n• Stock de seguridad SS\n• Punto de reorden R = μL + SS\n\nDemanda durante lead time:\nD LT = μL + zσ LT'}</Formula>
+          </div>
+          <div className="card">
+            <T t="Stock de Seguridad"/>
+            <Formula>{'SS = z × σ DLT\n\nσ DLT = √(L × σD² + μD² × σL²)\n\ndonde:\n• z = Factor de servicio (número de desv. estándar)\n• σD = Desviación estándar de demanda\n• σL = Desviación estándar de lead time\n• μD = Demanda promedio'}</Formula>
+            <Ca color="yellow" title="Nivel de Servicio vs Costo">
+              Mayor z → Mayor stock de seguridad → Mayor costo de mantener pero menor probabilidad de faltante
+            </Ca>
+          </div>
+          <div className="card">
+            <T t="5.8 Modelo de un Solo Período (Newsvendor)"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              Para productos perecederos o de temporada única (periódicos, moda, productos frescos).
+            </p>
+            <Formula>{'Razón de Fractila:\n\nP(unidades) = Cu / (Cu + Co)\n\n• Cu = Costo por faltante (beneficio perdido)\n• Co = Costo por exceso (costo hundido)\n\nQ* = μ + z × σ\n(z = valor z de la distribución normal correspondiente a P)'}</Formula>
+          </div>
+        </div>
+      )}
+
+      {tab==='service'&&(
+        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+          <div className="card">
+            <T t="5.9 Medición del Nivel de Servicio"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
+              El nivel de servicio indica qué porcentaje de la demanda se satisface inmediatamente del inventario.
+            </p>
+            <Formula>{'Nivel de Servicio (Fill Rate):\n\nNS = 1 - (Faltantes / Demanda Total)\n\nTipo I (Ciclo):\nP(Demanda ≤ R) ≥ NS objetivo\n\nTipo II (Fill Rate):\nFR = 1 - (Unidades faltantes / Demanda total)'}</Formula>
+          </div>
+          <div className="card">
+            <T t="Relación Nivel de Servicio - z"/>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'.5rem',marginTop:'.5rem'}}>
+              {[
+                ['90%','1.28'],
+                ['95%','1.65'],
+                ['97.5%','1.96'],
+                ['99%','2.33']
+              ].map(([ns,z])=>(
+                <div key={ns} style={{padding:'.75rem',background:'#1e293b',borderRadius:'6px',textAlign:'center'}}>
+                  <div style={{fontSize:'.7rem',color:'#10b981',fontWeight:'bold'}}>{ns}</div>
+                  <div style={{fontSize:'.9rem',color:'#fff'}}>z = {z}</div>
+                </div>
+              ))}
             </div>
+          </div>
+          <div className="card">
+            <T t="Costo Total Esperado"/>
+            <Formula>{'CTE = Costo mantener inventario + Costo faltantes\n\nPara fill rate dado:\nCTE = (Q/2 - sS)h + (sS/Q)p\n\ndonde s = nivel de servicio'}</Formula>
           </div>
         </div>
       )}
@@ -98,38 +252,27 @@ export default function Module5View(){
       {tab==='ejemplos'&&(
         <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
           <div className="card">
-            <T t="Ejemplo 1: EOQ Básico (Hillier & Lieberman)"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              <b>Datos del problema:</b><br/>
-              • Demanda anual: d = 8,000 unidades/año<br/>
-              • Costo de ordenar: K = $12,000 por orden<br/>
-              • Costo de mantener: h = $0.30 por unidad/año
+            <T t="Ejemplo 1: EOQ Básico Completo"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',marginBottom:'.5rem'}}>
+              <b>Datos:</b> Una empresa tiene demanda anual de 12,000 unidades. Costo de ordenar = $75, 
+              costo unitario = $30, tasa de mantener = 25% anual. Tiempo de entrega = 3 días.
             </p>
-            <div style={{fontSize:'1.1rem',fontFamily:'JetBrains Mono',textAlign:'center',padding:'1rem',color:'#10b981',background:'#022c22',borderRadius:'8px',marginBottom:'1rem'}}>
-              Q* = √(2 × 8,000 × 12,000 / 0.30) = √(640,000,000) = 25,298 unidades
-            </div>
-            <p style={{fontSize:'.75rem',color:'#94a3b8'}}>Costo total mínimo: T = √(2 × d × K × h) = √(2 × 8,000 × 12,000 × 0.30) = $7,589.57/año</p>
+            <Formula>{'Paso 1: Calcular h\nh = C × i = 30 × 0.25 = $7.50/unidad-año\n\nPaso 2: Calcular Q*\nQ* = √(2 × 12000 × 75 / 7.5)\nQ* = √(240,000) = 489.9 ≈ 490 unidades\n\nPaso 3: Punto de reorden\nDemanda diaria = 12000/365 = 32.88 ud/día\nROP = 32.88 × 3 = 96.6 ≈ 97 unidades\n\nPaso 4: Verificación\nPedidos/año = 12000/490 = 24.49 ≈ 25\nCiclo = 365/25 = 14.6 días'}</Formula>
           </div>
           <div className="card">
-            <T t="Ejemplo 2: Modelo con Tiempo de Entrega"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              <b>Datos:</b> d = 8,000/año, K = $12,000, h = $0.30/año, tiempo de entrega L = 3 días<br/>
-              <b>Ciclo óptimo:</b> T* = Q*/d = 25,298/8,000 = 3.16 años (≈ 1,154 días)<br/>
-              <b>Punto de reorden:</b> R = d × L = (8,000/365) × 3 = 65.75 ≈ 66 unidades
+            <T t="Ejemplo 2: EOQ con Faltantes"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',marginBottom:'.5rem'}}>
+              <b>Datos:</b> d=3,000/año, K=$50, h=$4/unidad-año, p=$10/unidad-año
             </p>
-            <div style={{fontSize:'1rem',fontFamily:'JetBrains Mono',textAlign:'center',padding:'1rem',color:'#fca5a5',background:'#450a0a',borderRadius:'8px'}}>
-              Cuando el inventario baje a 66 unidades, colocar orden de 25,298 unidades
-            </div>
+            <Formula>{'Q* = √(2×3000×50/4) × √((4+10)/10)\nQ* = √(75,000) × √(1.4)\nQ* = 273.9 × 1.183 = 324 unidades\n\nS* = Q* × (h/(h+p))\nS* = 324 × (4/14) = 92.6 unidades\n\nInventario máximo = Q - S = 324 - 92.6 = 231.4 ud'}</Formula>
           </div>
           <div className="card">
-            <T t="Ejemplo 3: Con Faltantes Permitidos"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              <b>Datos:</b> d = 1,200/año, K = $50, h = $1.20/unidad-año, p = $3/unidad-año
+            <T t="Ejemplo 3: Stock de Seguridad"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',marginBottom:'.5rem'}}>
+              <b>Datos:</b> Demanda media = 100 ud/semana, σ = 20 ud. Lead time = 2 semanas, σL = 0.5 sem. 
+              Nivel de servicio = 95%
             </p>
-            <div style={{fontSize:'1rem',fontFamily:'JetBrains Mono',textAlign:'center',padding:'1rem',color:'#60a5fa',background:'#1e3a5f',borderRadius:'8px',marginBottom:'1rem'}}>
-              Q* = √(2×1200×50/1.2) × √((1.2+3)/3) = √(100,000) × 1.183 = 316.23 × 1.183 = 374 unidades<br/>
-              S* = 374 × (1.2/(1.2+3)) = 374 × 0.286 = 107 unidades (faltante máximo)
-            </div>
+            <Formula>{'σDLT = √(L × σD² + μD² × σL²)\nσDLT = √(2×400 + 10000×0.25)\nσDLT = √(800 + 2500) = √(3300) = 57.44 ud\n\nPara NS=95%, z = 1.65\n\nSS = z × σDLT = 1.65 × 57.44 = 94.78 ud\n\nROP = μL + SS = (100×2) + 94.78 = 294.78 ≈ 295 ud'}</Formula>
           </div>
         </div>
       )}
@@ -137,104 +280,63 @@ export default function Module5View(){
       {tab==='ejercicios'&&(
         <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
           <div className="card">
-            <T t="Ejercicio 1: Cálculo de EOQ"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              Una empresa fabricante de muebles consume 5,000 ruedas de caucho mensualmente. 
-              El costo de ordenar una corrida de producción es de $800 y el costo de mantener una 
-              rueda en inventario es de $2 por unidad/mes.<br/><br/>
-              <b>Determine:</b><br/>
-              a) El tamaño óptimo del lote (Q*)<br/>
-              b) El número de pedidos por año<br/>
-              c) El costo total anual
+            <T t="Ejercicio 1: EOQ Básico"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',marginBottom:'.5rem'}}>
+              Una empresa manufacturera consume 10,000 toneladas de materia prima al año. 
+              Cada orden tiene un costo de $200. El costo de mantener una tonelada en inventario es de $10/año.
+              El tiempo de entrega es de 5 días.
             </p>
             <details style={{background:'#0f172a',padding:'1rem',borderRadius:'8px'}}>
               <summary style={{cursor:'pointer',color:'#10b981',fontWeight:'bold'}}>Ver Solución</summary>
               <div style={{marginTop:'1rem',fontSize:'.85rem',color:'#cbd5e1'}}>
                 <b>Solución:</b><br/>
-                d = 5,000/mes × 12 = 60,000 unidades/año<br/>
-                K = $800/orden<br/>
-                h = $2/unidad-mes × 12 = $24/unidad-año<br/><br/>
-                Q* = √(2×60,000×800/24) = √(4,000,000) = 2,000 unidades<br/>
-                Número de pedidos = 60,000/2,000 = 30 pedidos/año<br/>
-                Costo total = (60,000/2,000)×800 + (2,000/2)×24 = $24,000 + $24,000 = $48,000/año
+                d = 10,000 ton/año<br/>
+                K = $200/orden<br/>
+                h = $10/ton-año<br/>
+                L = 5 días<br/><br/>
+                Q* = √(2×10000×200/10) = √(4,000,000) = 2,000 ton<br/>
+                Demanda diaria = 10,000/365 = 27.40 ton/día<br/>
+                ROP = 27.40 × 5 = 137 ton
               </div>
             </details>
           </div>
           <div className="card">
-            <T t="Ejercicio 2: Punto de Reorden"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              Utilizando los datos del ejercicio anterior, si el tiempo de entrega es de 2 semanas:<br/><br/>
-              <b>Determine el punto de reorden.</b>
+            <T t="Ejercicio 2: Descuentos por Cantidad"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',marginBottom:'.5rem'}}>
+              El proveedor ofrece: $20/unidad para &lt;500 uds, $18/unidad para 500-999 uds, $15/unidad para ≥1000 uds.
+              Demanda = 4,000/año, K = $100, h = 25%.
             </p>
             <details style={{background:'#0f172a',padding:'1rem',borderRadius:'8px'}}>
               <summary style={{cursor:'pointer',color:'#10b981',fontWeight:'bold'}}>Ver Solución</summary>
               <div style={{marginTop:'1rem',fontSize:'.85rem',color:'#cbd5e1'}}>
                 <b>Solución:</b><br/>
-                Demanda semanal = 60,000/52 = 1,153.85 unidades/semana<br/>
-                Tiempo de entrega = 2 semanas<br/>
-                R = d × L = 1,153.85 × 2 = 2,307.7 ≈ 2,308 unidades
+                h = 20×0.25 = $5 (con precio base $20)<br/>
+                Q* = √(2×4000×100/5) = √(1,600,000) = 1,265 uds<br/><br/>
+                Como Q* = 1265 está entre 500-999, el precio de $18 aplica.<br/>
+                h nuevo = 18×0.25 = $4.50<br/>
+                Q* recalculada = √(2×4000×100/4.5) = √(1,777,778) = 1,333 uds<br/><br/>
+                Verificar: CT(1265, $18) vs CT(1000, $15)<br/>
+                Seleccionar la de menor costo total.
               </div>
             </details>
           </div>
           <div className="card">
-            <T t="Ejercicio 3: Modelo con Faltantes"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              Una librería tiene una demanda anual de 3,000 ejemplares de un libro. 
-              El costo de ordenar es de $100, el costo de mantener es de $6/unidad-año, 
-              y el costo por faltante es de $25/unidad-año.<br/><br/>
-              <b>Determine:</b><br/>
-              a) Cantidad óptima a ordenar<br/>
-              b) Faltante máximo permitido
+            <T t="Ejercicio 3: Newsvendor"/>
+            <p style={{fontSize:'.82rem',color:'#cbd5e1',marginBottom:'.5rem'}}>
+              Un quiosco vende periódicos a $1.50. El costo de compra es $0.75. 
+              La demanda promedio es 100 con σ=30. No hay valor de rescate.
             </p>
             <details style={{background:'#0f172a',padding:'1rem',borderRadius:'8px'}}>
               <summary style={{cursor:'pointer',color:'#10b981',fontWeight:'bold'}}>Ver Solución</summary>
               <div style={{marginTop:'1rem',fontSize:'.85rem',color:'#cbd5e1'}}>
                 <b>Solución:</b><br/>
-                d = 3,000/año, K = $100, h = $6/unidad-año, p = $25/unidad-año<br/><br/>
-                Q* = √(2×3000×100/6) × √((6+25)/25)<br/>
-                Q* = √(1,000,000) × √(1.24) = 1,000 × 1.1135 = 1,114 unidades<br/><br/>
-                S* = 1,114 × (6/(6+25)) = 1,114 × 0.1935 = 215 unidades
+                Cu = 1.50 - 0.75 = $0.75 (margen por venta)<br/>
+                Co = 0.75 - 0 = $0.75 (costo del periódico no vendido)<br/><br/>
+                P(u) = Cu/(Cu+Co) = 0.75/1.50 = 0.50<br/><br/>
+                z para P=0.50 es 0<br/>
+                Q* = μ + zσ = 100 + 0×30 = 100 periódicos
               </div>
             </details>
-          </div>
-        </div>
-      )}
-
-      {tab==='python'&&(
-        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
-          <div className="card">
-            <T t="18.6 Modelos Estocásticos de Revisión Continua (La variabilidad Aleatoria)"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              Ante la imprevisibilidad genuina de los mercados, la investigación de operaciones asume la demanda no como una recta polinomial (D), sino como <b>una variable aleatoria que transita una distribución de probabilidad subyacente</b>.
-            </p>
-            <div className="formula-box">
-              {'Función de Reposición Combinada (Incertidumbre en Tiempo L y Demanda D):\n\nLa varianza temporal combinada dicta que el Inventario de Seguridad debe contrarrestar:\n1. Qué tanto oscila la demanda durante el día a dia (Desv. Típica de la Demanda σD)\n2. Qué tanto se demora el transporte intermodal (Desv. Típica del Tiempo Lead time σL)\n\nSS = z · √[ ( L̄ * σD² ) + ( D̄² * σL² ) ]'}
-            </div>
-            <Ca color="yellow" title="Tolerancia Bayesiana (Métrica de Nivel de Servicio)">
-              Decidir el nivel $z$ significa delimitar el área bajo la curva normal de Gauss; para lograr satisfacer demanda estocástica sin backorders (R-level), si $z \to 3$ el costo por almacenaje (h) tenderá a incrementarse de manera exponencial respecto a la desviación estándar asintótica de la red.
-            </Ca>
-          </div>
-        </div>
-      )}
-
-      {tab==='desconocida'&&(
-        <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
-          <div className="card">
-            <T t="18.7 Modelo Estocástico de un Solo Periodo (Vendedor de Periódicos)"/>
-            <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              Un modelo orientado ex profeso para ciclos de consumo perecederos de periodo único (Ej: Ropa cíclica o periódicos). Aquí se sustituye el costo de oportunidad de largo plano por el <b>Análisis de ganancia marginal</b>.
-            </p>
-            <div style={{display:'grid',gridTemplateColumns:'1.5fr 1fr',gap:'1rem'}}>
-              <div style={{padding:'1rem',background:'#0f172a',border:'1px solid #1e293b',borderRadius:'8px'}}>
-                <T t="Dilema de Maximización (Hillier)"/>
-                <p style={{fontSize:'.75rem',color:'#cbd5e1',lineHeight:1.6}}>El problema estriba en resolver un juego de funciones de pago. El valor esperado estadístico dictamina una regla heurística basada en probabilidades críticas:<br/><br/>Siendo <b>C_{`u`}</b> el Costo Administrativo Unitarizado de No Cumplir y <b>C_{`o`}</b> el daño remanente por Excedentes de Stock.</p>
-              </div>
-              <div style={{padding:'1rem',background:'#022c22',border:'1px solid #10b981',borderRadius:'8px',display:'flex',flexDirection:'column',justifyContent:'center',textAlign:'center'}}>
-                <span style={{fontSize:'.7rem',color:'#6ee7b7'}}>Razón de Fractila</span>
-                <span style={{fontSize:'1.5rem',fontFamily:'JetBrains Mono',color:'#fff',marginTop:'.25rem'}}>P(u) = Cu / (Cu + Co)</span>
-              </div>
-            </div>
-            <p style={{fontSize:'.75rem',color:'#94a3b8',marginTop:'1rem'}}>Para implementar la directiva analítica, la empresa proyecta el cálculo probabilístico normal de las demandas y asegura la suficiencia del pedido por encima de las distribuciones sub-$P(u)$.</p>
           </div>
         </div>
       )}
@@ -242,61 +344,89 @@ export default function Module5View(){
       {tab==='python'&&(
         <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
           <div className="card" style={{padding:'2rem'}}>
-            <T t="Solvers de Investigación de Operaciones (Python)"/>
+            <T t="Solvers Python - Gestión de Inventarios"/>
             <p style={{fontSize:'.82rem',color:'#cbd5e1',lineHeight:1.7,marginBottom:'.75rem'}}>
-              Copia este script en tu entorno (ej. Jupyter, VSCode) y córrelo asegurándote de tener instalada la librería estadística (<code>pip install scipy</code>). Contiene los métodos para EOQ y el Modelo Estocástico de P(u).
+              Bibliotecas útiles: <code>pip install scipy pandas numpy</code>
             </p>
             <div style={{background:'#0f172a',padding:'1rem',borderRadius:'8px',overflowX:'auto'}}>
-              <pre style={{fontFamily:'JetBrains Mono',fontSize:'.75rem',color:'#6ee7b7',margin:0}}>
-{`import math
+              <pre style={{fontFamily:'JetBrains Mono',fontSize:'.7rem',color:'#6ee7b7',margin:0}}>{`import math
+import numpy as np
 from scipy.stats import norm
 
-class InventorySolverIO:
-    @staticmethod
-    def eoq_basico(demanda_anual, costo_ordenar_K, costo_mantener_h):
-        \"\"\"
-        Página 806 - Modelo Determinístico Básico EOQ (Hillier & Lieberman)
-        Q* = sqrt(2 * d * K / h)
-        \"\"\"
-        Q_optimo = math.sqrt((2 * demanda_anual * costo_ordenar_K) / costo_mantener_h)
-        costo_total = (demanda_anual / Q_optimo) * costo_ordenar_K + (Q_optimo / 2) * costo_mantener_h
-        return round(Q_optimo, 2), round(costo_total, 2)
-        
-    @staticmethod
-    def eoq_con_faltantes(d, K, h, p):
-        \"\"\" Lote Económico con faltantes permitidos (costo de penalización p) \"\"\"
-        Q_optimo = math.sqrt((2 * d * K) / h) * math.sqrt((h + p) / p)
-        S_max = Q_optimo * (h / (h + p)) # Déficit máximo permitido
-        return round(Q_optimo, 2), round(S_max, 2)
-
-    @staticmethod
-    def newsvendor_model(precio_venta, costo_unitario, valor_rescate, media_demanda, std_demanda):
-        \"\"\"
-        Modelo Estocástico de un Solo Periodo (Revisión Continua Z)
-        Cu = Beneficio perdido por faltante
-        Co = Costo hundido por exceso
-        \"\"\"
-        Cu = precio_venta - costo_unitario
-        Co = costo_unitario - valor_rescate
-        
-        razon_fractila = Cu / (Cu + Co)
-        # Buscar el Z-score en la curvatura Normal de Gauss
-        z_score = norm.ppf(razon_fractila)
-        
-        Q_optimo = media_demanda + (z_score * std_demanda)
-        return round(razon_fractila, 4), round(z_score, 2), round(Q_optimo, 0)
-
-# --- EJECUCIÓN (PRUEBAS DE ESCRITORIO) ---
-if __name__ == "__main__":
-    print("--- 1. EOQ BÁSICO ---")
-    Q, TC = InventorySolverIO.eoq_basico(d=8000, K=12000, h=0.30)
-    print(f"Lote Óptimo a Producir: {Q} uds | Costo Anual: ${TC}")
+class InventorySolver:
+    """Solvers para Gestión de Inventarios - Basado en Ballou, Hillier & Lieberman"""
     
-    print("\\n--- 2. NEWSVENDOR (Modelo Vendedor de Periódicos) ---")
-    cu_ratio, z, q_opt = InventorySolverIO.newsvendor_model(150, 80, 20, media_demanda=250, std_demanda=45)
-    print(f"Razón Fractila P(u): {cu_ratio*100}% | Z-Score: {z}σ | Inv. Óptimo: {q_opt} uds")
-`}
-              </pre>
+    @staticmethod
+    def eoq_basic(D, K, h):
+        """EOQ Básico: Q* = sqrt(2DK/h)"""
+        Q = math.sqrt(2 * D * K / h)
+        cycles = D / Q
+        TC = (D/Q)*K + (Q/2)*h + D*0  # Sin costo unitario
+        return round(Q, 2), round(TC, 2), round(cycles, 2)
+    
+    @staticmethod
+    def eoq_backorder(D, K, h, p):
+        """EOQ con faltantes: Q*, S"""
+        Q = math.sqrt(2*D*K/h) * math.sqrt((h+p)/p)
+        S = Q * (h/(h+p))
+        return round(Q, 2), round(S, 2)
+    
+    @staticmethod
+    def epq(D, K, h, p_rate, d_rate):
+        """Lote Económico de Producción"""
+        if p_rate <= d_rate:
+            return None, "Tasa producción debe ser > tasa demanda"
+        Q = math.sqrt(2*D*K/h) * math.sqrt(p_rate/(p_rate-d_rate))
+        max_inv = Q * (1 - d_rate/p_rate)
+        return round(Q, 2), round(max_inv, 2)
+    
+    @staticmethod
+    def safety_stock(daily_demand, sigma_d, lead_time, sigma_l, service_level=0.95):
+        """Stock de Seguridad y ROP"""
+        sigma_dlt = math.sqrt(lead_time * sigma_d**2 + daily_demand**2 * sigma_l**2)
+        z = norm.ppf(service_level)
+        SS = z * sigma_dlt
+        ROP = daily_demand * lead_time + SS
+        return round(SS, 2), round(ROP, 2), round(z, 2)
+    
+    @staticmethod
+    def newsvendor(unit_price, unit_cost, salvage, mu_d, sigma_d):
+        """Modelo Newsvendor - Un solo período"""
+        Cu = unit_price - unit_cost
+        Co = unit_cost - salvage
+        if Cu <= 0 or Co <= 0:
+            return None, "Costos deben ser positivos"
+        P = Cu / (Cu + Co)
+        z = norm.ppf(P)
+        Q = mu_d + z * sigma_d
+        return round(P, 4), round(z, 3), round(Q, 0)
+
+# === EJEMPLOS DE USO ===
+if __name__ == "__main__":
+    solver = InventorySolver()
+    
+    print("=== 1. EOQ Básico ===")
+    Q, TC, n = solver.eoq_basic(D=8000, K=50, h=5)
+    print(f"Q* = {Q} uds | Costo Anual = ${TC} | Pedidos/año = {n}")
+    
+    print("\\n=== 2. EOQ con Faltantes ===")
+    Q, S = solver.eoq_backorder(D=3000, K=50, h=4, p=10)
+    print(f"Q* = {Q} uds | S (máx faltante) = {S} uds")
+    
+    print("\\n=== 3. EPQ ===")
+    Q, Imax = solver.epq(D=10000, K=200, h=3, p_rate=100, d_rate=30)
+    print(f"Q* = {Q} uds | Inventario máximo = {Imax} uds")
+    
+    print("\\n=== 4. Stock de Seguridad ===")
+    SS, ROP, z = solver.safety_stock(daily_demand=50, sigma_d=15, 
+                                     lead_time=3, sigma_l=0.5, 
+                                     service_level=0.95)
+    print(f"SS = {SS} uds | ROP = {ROP} uds | z = {z}")
+    
+    print("\\n=== 5. Newsvendor ===")
+    P, z, Q = solver.newsvendor(unit_price=1.50, unit_cost=0.75, 
+                                salvage=0, mu_d=100, sigma_d=30)
+    print(f"P(u) = {P*100}% | z = {z} | Q* = {Q} uds")`}</pre>
             </div>
           </div>
         </div>
