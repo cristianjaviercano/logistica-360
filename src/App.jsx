@@ -13,6 +13,7 @@ import LabABC      from './labs/LabABC';
 import LabKPI      from './labs/LabKPI';
 import LabEOQ      from './labs/LabEOQ';
 import LabMadurez  from './labs/LabMadurez';
+import LabSupplyChain from './labs/LabSupplyChain';
 
 const NAV = [
   { section: 'GENERAL' },
@@ -38,7 +39,10 @@ const NAV = [
   { id: 'm5', label: 'Módulo 5: Optimización del Inventario', icon: '📐' },
   { id: 'lab5', label: 'Lab: EOQ + Punto de Reorden', icon: '⚙️' },
 
-  { section: 'UNIDAD 6: CLASE MUNDIAL' },
+  { section: 'UNIDAD 6: CADENA DE SUMINISTRO' },
+  { id: 'labSC', label: 'Lab: Simulador Supply Chain', icon: '🔗' },
+
+  { section: 'UNIDAD 7: CLASE MUNDIAL' },
   { id: 'm6', label: 'Módulo 6: WMS y Clase Mundial', icon: '🌐' },
   { id: 'lab6', label: 'Lab: Diagnóstico de Madurez', icon: '🏆' },
 
@@ -53,11 +57,12 @@ const VIEWS = {
   m3: () => <Module3View />,   lab3: () => <LabABC />,
   m4: () => <Module4View />,   lab4: () => <LabKPI />,
   m5: () => <Module5View />,   lab5: () => <LabEOQ />,
+  labSC: () => <LabSupplyChain />,
   m6: () => <Module6View />,   lab6: () => <LabMadurez />,
   evaluacion: () => <EvalView />,
 };
 
-const COMPLETABLE = ['m1','lab1','m2','lab2','m3','lab3','m4','lab4','m5','lab5','m6','lab6'];
+const COMPLETABLE = ['m1','lab1','m2','lab2','m3','lab3','m4','lab4','m5','lab5','labSC','m6','lab6'];
 
 function SyllabusView() {
   return (
