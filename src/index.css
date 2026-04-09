@@ -196,3 +196,46 @@ button.btn-secondary:hover { border-color: var(--accent); color: var(--text-1); 
   display: flex; align-items: center; gap: .5rem; margin-bottom: .75rem;
 }
 .sec-title::before { content:''; display:block; width:3px; height:16px; background:var(--accent); border-radius:2px; flex-shrink:0; }
+
+/* ─── Mobile Styles ─────────────────────────────────────────────────────── */
+.mobile-only { display: none; }
+.app-mobile-header { display: none; }
+.sidebar-overlay { display: none; }
+.main-area-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+@media (max-width: 768px) {
+  .app-mobile-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg-sidebar); border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1rem; flex-shrink: 0;
+  }
+  .brand-icon-mobile {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #10b981, #065f46);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .menu-btn {
+    background: var(--border); border: none; color: var(--text-1);
+    width: 36px; height: 36px; border-radius: 8px;
+    font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; width: 280px;
+    transform: translateX(-100%); transition: transform 0.3s ease;
+  }
+  .sidebar.open { transform: translateX(0); }
+  
+  .sidebar-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6); z-index: 40;
+    display: none;
+  }
+  .sidebar-overlay.open { display: block; }
+  
+  .mobile-only { display: block; }
+  .close-btn { background: transparent; border: none; color: var(--text-2); font-size: 1.2rem; cursor: pointer; padding: 0.5rem; }
+  
+  .main-area { padding: 1rem; }
+}

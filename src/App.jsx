@@ -14,6 +14,8 @@ import LabKPI      from './labs/LabKPI';
 import LabEOQ      from './labs/LabEOQ';
 import LabMadurez  from './labs/LabMadurez';
 import LabSupplyChain from './labs/LabSupplyChain';
+import GamificationHUD from './components/GamificationHUD';
+import CertificateGenerator from './components/Certificate';
 
 const NAV = [
   { section: 'GENERAL' },
@@ -136,11 +138,13 @@ export default function App() {
   });
   const [student, setStudent] = useState(() => localStorage.getItem('gestion_student') || '');
   const [inputVal, setInputVal] = useState(student);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const progress = Math.round((done.size / COMPLETABLE.length) * 100);
 
   const navigate = (id) => {
     setCurrent(id);
+    setMenuOpen(false);
     if (COMPLETABLE.includes(id)) {
       setDone(prev => {
         const next = new Set(prev); next.add(id);
@@ -158,17 +162,23 @@ export default function App() {
   const Comp = VIEWS[current];
 
   return (
-    <div className="app">
+    <div className="app relative">
+      {/* Mobile Overlay */}
+      <div className={`sidebar-overlay ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)}></div>
+
       {/* ── Sidebar ── */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${menuOpen ? 'open' : ''}`}>
         <div className="brand">
-          <div className="brand-logo">
-            <div className="brand-icon">🏭</div>
-            <div>
-              <div className="brand-name">Gestión de<br/>Almacenamiento</div>
+          <div className="brand-logo" style={{display:'flex', justifyContent:'space-between', width:'100%'}}>
+            <div style={{display:'flex', gap:'0.625rem', alignItems:'center'}}>
+              <div className="brand-icon">🏭</div>
+              <div>
+                <div className="brand-name">Gestión de<br/>Almacenamiento</div>
+              </div>
             </div>
+            <button className="close-btn mobile-only" onClick={() => setMenuOpen(false)}>✕</button>
           </div>
-          <div className="brand-sub">UPB · Ing. Industrial VII</div>
+          <div className="brand-sub pt-2">UPB · Ing. Industrial VII</div>
         </div>
 
         <div className="progress-wrap">
@@ -205,10 +215,21 @@ export default function App() {
         </div>
       </aside>
 
-      {/* ── Content ── */}
-      <main className="main-area" key={current}>
-        {Comp ? <Comp /> : <div style={{color:'#94a3b8'}}>Selecciona un módulo</div>}
-      </main>
+      {/* ── Content Container ── */}
+      <div className="main-area-container">
+        {/* Mobile Header */}
+        <div className="app-mobile-header">
+          <div style={{display:'flex', gap:'0.625rem', alignItems:'center'}}>
+            <div className="brand-icon-mobile">🏭</div>
+            <div className="brand-name font-bold">Gestión de Almacenamiento</div>
+          </div>
+          <button className="menu-btn" onClick={() => setMenuOpen(true)}>☰</button>
+        </div>
+
+        <main className="main-area" key={current}>
+          {Comp ? <Comp /> : <div style={{color:'#94a3b8'}}>Selecciona un módulo</div>}
+        </main>
+      </div>
     </div>
   );
 }
