@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-const T = ({t,c='#10b981'})=>(<div className="sec-title" style={{color:c}}>{t}</div>);
+const T = ({t,c='#334155'})=>(<div className="sec-title" style={{color:c}}>{t}</div>);
 const Ca = ({color='green',title,children})=>(<div className={`callout ${color}`} style={{marginBottom:'.75rem'}}><div className="callout-title">{title}</div><p>{children}</p></div>);
 
 const TABS = [['logistica','📦 Triángulo de Logística'],['conceptos','📚 Conceptos Clave'],['tipos','🏭 Tipos de Almacén'],['layout','📐 Diseño y Principios'],['indicadores','📊 Indicadores Base']];
@@ -9,9 +9,9 @@ export default function Module1View(){
   return(
     <div className="animate-in" style={{display:'flex',flexDirection:'column',gap:'1.25rem'}}>
       <div className="card gradient-header" style={{padding:'2rem'}}>
-        <span style={{fontSize:'.7rem',fontFamily:'JetBrains Mono',color:'#10b981'}}>MÓDULO 1 · Fundamentos</span>
-        <h1 style={{fontSize:'2rem',fontWeight:900,color:'#fff',marginTop:'.25rem'}}>Fundamentos de Almacenamiento</h1>
-        <p style={{color:'#94a3b8',marginTop:'.5rem',fontSize:'.85rem'}}>Michel Roux (2009) · Taha (Investigación de Operaciones) · Hillier & Lieberman</p>
+        <span style={{fontSize:'.7rem',fontFamily:'JetBrains Mono',color:'#64748b'}}>MÓDULO 1 · Fundamentos</span>
+        <h1 style={{fontSize:'2rem',fontWeight:700,color:'#1e293b',marginTop:'.25rem'}}>Fundamentos de Almacenamiento</h1>
+        <p style={{color:'#64748b',marginTop:'.5rem',fontSize:'.85rem'}}>Michel Roux (2009) · Taha (Investigación de Operaciones) · Hillier & Lieberman</p>
       </div>
 
       <div className="tab-bar">
